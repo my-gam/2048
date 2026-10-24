@@ -146,7 +146,8 @@ export class Game2048 {
       bestScore: this.bestScore,
       status: this.status,
       keepPlaying: this.keepPlaying,
-      moveCount: this.moveCount
+      moveCount: this.moveCount,
+      historySize: this.history.length
     };
   }
 

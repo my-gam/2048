@@ -41,6 +41,8 @@ export interface GameState {
   keepPlaying: boolean;
   /** 从当前这局开始起算的有效步数（一次 slide 算一步，撤销不计）。 */
   moveCount: number;
+  /** 当前可撤销栈深度；>0 时 UI 可以显示「撤销」按钮为可点。 */
+  historySize: number;
 }
 
 /** 一局的可回退快照，用于 undo。 */

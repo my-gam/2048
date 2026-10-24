@@ -1,0 +1,36 @@
+{
+  "name": "@my-games/game-2048-vue",
+  "version": "0.1.0",
+  "description": "2048 游戏的 Vue 3 组件适配器（Composition API）。",
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./style.css": "@my-games/game-2048-core/styles.css"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build --mode lib",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@my-games/game-2048-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vue": "^3.5.12",
+    "vue-tsc": "^2.1.6"
+  },
+  "keywords": ["2048", "vue", "game", "puzzle"],
+  "license": "MIT"
+}
