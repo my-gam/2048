@@ -3,17 +3,22 @@
   "version": "0.1.0",
   "description": "2048 游戏的 Vue 3 组件适配器（Composition API）。",
   "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./style.css": "@my-games/2048-core/styles.css"
   },
   "files": [
+    "dist",
     "src",
     "README.md"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "vite build --mode lib",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
@@ -26,11 +31,21 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "vite": "^5.4.10",
+    "vite-plugin-dts": "^4.3.0",
     "vue": "^3.5.12",
-    "vue-tsc": "^2.1.6"
+    "vue-tsc": "^2.2.12"
   },
-  "keywords": ["2048", "vue", "game", "puzzle"],
-  "license": "MIT"
+  "keywords": ["2048", "vue", "vue3", "game", "puzzle", "component"],
+  "license": "MIT",
+  "author": { "name": "xyj2156" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/my-gam/2048.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/my-gam/2048/tree/main/packages/vue#readme",
+  "bugs": { "url": "https://github.com/my-gam/2048/issues" },
+  "publishConfig": { "access": "public" }
 }

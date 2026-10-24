@@ -18,7 +18,7 @@
     "src",
     "README.md"
   ],
-  "sideEffects": false,
+  "sideEffects": ["./src/styles.css"],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch",
@@ -27,9 +27,18 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "vitest": "^2.1.4"
   },
-  "keywords": ["2048", "game", "core", "puzzle", "ai", "expectimax"],
-  "license": "MIT"
+  "keywords": ["2048", "game", "core", "puzzle", "ai", "expectimax", "typescript"],
+  "license": "MIT",
+  "author": { "name": "xyj2156" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/my-gam/2048.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/my-gam/2048/tree/main/packages/core#readme",
+  "bugs": { "url": "https://github.com/my-gam/2048/issues" },
+  "publishConfig": { "access": "public" }
 }
