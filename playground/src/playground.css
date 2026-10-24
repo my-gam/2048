@@ -66,6 +66,46 @@ body {
   letter-spacing: 0.2px;
 }
 
+.pg-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgba(119, 110, 101, 0.08);
+  align-self: flex-start;
+  flex-wrap: wrap;
+}
+
+.pg-tab {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--pg-fg);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+
+.pg-tab:hover:not(.is-active) {
+  background: rgba(119, 110, 101, 0.08);
+}
+
+.pg-tab.is-active {
+  background: white;
+  color: var(--pg-fg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.pg-panel[role="tabpanel"] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
 .pg-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -109,6 +149,7 @@ body {
 
 .pg-tag-vue { background: #42b88322; color: #1f7a4d; }
 .pg-tag-react { background: #61dafb22; color: #17627a; }
+.pg-tag-vanilla { background: #ffb02022; color: #8a5a00; }
 
 .pg-panel-desc {
   margin: 0;

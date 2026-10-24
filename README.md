@@ -1,12 +1,12 @@
 # game-2048
 
-一个 2048 数字合成小游戏。核心引擎不依赖任何框架，Vue 3 与 React 18/19 各有一份官方适配器；
-两端共享同一份样式表与动画语义，行为完全一致。
+一个 2048 数字合成小游戏。核心引擎不依赖任何框架，产出 **ESM / CJS / UMD / IIFE 四种格式**；
+Vue 3 与 React 18/19 各有一份官方适配器，两端共享同一份样式表与动画语义，行为完全一致。
 
 - **技术栈**：TypeScript 7（Go-native tsgo）· Vite 8（Rolldown bundler）·
   Vue 3.5 · React 19（peerDep 兼容 18.2+）· Vitest 5
 - **包结构**：`packages/core` + `packages/vue` + `packages/react`，pnpm workspace 管理，
-  `playground/` 是同时挂两种框架的演示页。
+  `playground/` 是三 tab 演示页（Vanilla / Vue / React）。
 - **纯 TS**：全项目 `strict: true` + `noUncheckedIndexedAccess`；core 单元测试 44 条，
   覆盖滑动、合并、撤销、存档、AI、边界与错误隔离。
 - **零框架耦合的引擎**：`Game2048` 类暴露 `subscribe(fn)` 推快照，UI 层拿什么框架
@@ -24,19 +24,30 @@ pnpm install
 pnpm dev        # 起 Vite，默认 http://127.0.0.1:5173
 ```
 
-打开后页面里同时出现两个 2048 棋盘（Vue / React），各自持有独立的存档键
-`g2048-vue:save` 与 `g2048-react:save`，互不覆盖。想调试 AI：
-```
-http://127.0.0.1:5173/?ai=1
-```
+打开后是三个 tab 的 playground：
+- **Vanilla** — 直接消费 `@my-games/2048-core`，无框架、手工画 DOM（默认打开）
+- **Vue 3** — `@my-games/2048-vue` 组件
+- **React 18/19** — `@my-games/2048-react` 组件
+
+三个 tab 各自持独立存档键 `g2048-<tab>:save`，切来切去不打断对局。
+可分享链接：
+- `?demo=vanilla|vue|react` 直接进某个 tab
+- `?ai=1` 打开 AI 面板 + 每 tab 里的「提示」/「AI 帮走」按钮
 
 其他常用命令：
 
 ```bash
-pnpm build      # 三包各自 vite build → dist/(index.js + index.d.ts + index.css)
-pnpm test       # 跑 core 单元测试（44 条）
-pnpm typecheck  # 三包 + playground 全量类型检查（纯 tsc，不依赖 vue-tsc）
+pnpm build       # 三包 vite lib build → dist（core 四格式；vue/react ESM+CSS+DTS）
+pnpm test        # 跑 core 单元测试（44 条）
+pnpm typecheck   # 三包 + playground 全量类型检查（纯 tsc，不依赖 vue-tsc）
+node tools/pages.mjs   # 本地跑一遍 GitHub Pages 构建 + 零断链自检
 ```
+
+## 在线 demo
+
+**<https://my-gam.github.io/2048/>** — 由 `.github/workflows/pages.yml` 从 `main` 分支
+自动构建并 deploy；每次 `pnpm playground/**`、`packages/**`、`tools/pages.mjs`
+或 lockfile 变化都触发重建。
 
 ## 玩法
 
@@ -84,6 +95,70 @@ function onLost() { console.log('lost'); }
 JS bundle 里不再有 `import 'foo.css'`。消费者在自己的入口加一次
 `import '@my-games/2048-vue/style.css'`（或从 core 引 `import '@my-games/2048-core/styles.css'`，
 两者内容一致）。
+
+### 浏览器直接引入（IIFE / UMD，无需 bundler）
+
+core 除了 ESM/CJS，还产出 `dist/index.iife.js` 与 `dist/index.umd.js`，
+全局变量名 **`Game2048Core`**——`<script src>` 直接引就能玩：
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/@my-games/2048-core@0.3.0/src/styles.css" />
+  </head>
+  <body>
+    <div id="app" class="game-2048">
+      <div class="game-2048-board" style="--cols: 4" tabindex="0">
+        <div class="game-2048-grid"></div>
+        <div class="game-2048-tile-layer"></div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/@my-games/2048-core@0.3.0/dist/index.iife.js"></script>
+    <script>
+      const { Game2048, bestMove } = Game2048Core;
+      const game = new Game2048({ size: 4 });
+      game.subscribe((state) => {
+        const layer = document.querySelector('.game-2048-tile-layer');
+        layer.innerHTML = '';
+        for (const t of state.tiles) {
+          const el = document.createElement('div');
+          el.className = 'game-2048-tile' + (t.isNew ? ' is-new' : '') + (t.merged ? ' is-merged' : '');
+          el.style.setProperty('--row', t.row);
+          el.style.setProperty('--col', t.col);
+          el.setAttribute('data-value', t.value);
+          el.textContent = t.value;
+          layer.appendChild(el);
+        }
+      });
+      // 键盘 / 触摸按你自己的方式绑定；参考 playground 的 Vanilla tab
+      addEventListener('keydown', (ev) => {
+        const map = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+        const dir = map[ev.key];
+        if (dir) game.move(dir);
+      });
+    </script>
+  </body>
+</html>
+```
+
+`bestMove(game.getGridValues(), { depth: 3 })` 可用来做 AI 提示；`simulateUntilEnd`
+能整个交给 AI 自动跑，用来做基准或彩蛋。
+
+**UMD vs IIFE 差别**：UMD 优先检测 `module.exports` 与 AMD `define.amd`，
+都不在才回落到全局；IIFE 直接一个 `var Game2048Core = ...`。浏览器 script 标签
+引哪个都行，只是 RequireJS 项目用 UMD 更规范。
+
+### Node.js（CJS / ESM 双入口）
+
+```ts
+// ESM
+import { Game2048, bestMove } from '@my-games/2048-core';
+```
+```js
+// CJS
+const { Game2048, bestMove } = require('@my-games/2048-core');
+```
 
 ```ts
 import { Game2048 } from '@my-games/2048-core';
@@ -180,7 +255,7 @@ Tile 位置靠 CSS 变量 `--row` / `--col` + `calc()` 完成，无需 JS 测像
 ```
 game-2048/
 ├── packages/
-│   ├── core/          @my-games/2048-core   纯 TS 引擎（vite build --mode lib）
+│   ├── core/          @my-games/2048-core   纯 TS 引擎（vite lib · ESM+CJS+UMD+IIFE）
 │   │   ├── src/{types,board,game,ai,storage,index}.ts
 │   │   ├── src/styles.css                       单份视觉，Vue/React 共享
 │   │   ├── vite.config.ts
@@ -192,7 +267,13 @@ game-2048/
 │   └── react/         @my-games/2048-react React 18/19 组件 + hook
 │       ├── src/{Game2048.tsx,useGame.ts,index.ts}
 │       └── vite.config.ts                       plugin-react + vite-plugin-dts
-├── playground/        Vite 演示页（双框架并排）
+├── playground/        Vite 演示页（Vanilla / Vue / React 三 tab）
+│   └── src/{main.tsx,App.tsx,VuePanel.tsx,VanillaDemo.tsx,...}
+├── tools/
+│   └── pages.mjs      GitHub Pages 构建脚本（内存覆盖 base + 零断链自检）
+├── .github/workflows/
+│   ├── publish.yml    推 v* tag → 门禁 → Trusted Publishing 发三包到 npm
+│   └── pages.yml      main push → 构建 → deploy 到 my-gam.github.io/2048/
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json
 └── README.md
@@ -204,10 +285,11 @@ game-2048/
 
 | 位置 | 内容 |
 | --- | --- |
-| `packages/core/dist/` | `index.js` + `index.d.ts`（vite-plugin-dts rollup 版）+ sourcemap |
-| `packages/vue/dist/` | `index.js` + `index.d.ts` + `index.css`（vite lib 抽出的样式）+ sourcemap |
-| `packages/react/dist/` | `index.js` + `index.d.ts` + `index.css` + sourcemap |
-| `playground/dist/` | `vite build` 静态资源（部署 QW Pages 可直接指到这里） |
+| `packages/core/dist/` | `index.js`（ESM）· `index.cjs`（CJS）· `index.umd.js` · `index.iife.js` · `index.d.ts` · 各自 sourcemap |
+| `packages/vue/dist/` | `index.js`（ESM 单文件）+ `index.d.ts` + `index.css` + sourcemap |
+| `packages/react/dist/` | 同上 |
+| `playground/dist/` | `pnpm --filter playground build` 静态资源（base=`/`，本地预览用） |
+| `pages-dist/` | `node tools/pages.mjs` 输出（base=`/2048/`，GitHub Pages 用） |
 
 - **CSS 需要显式引入**：Vite 8 lib 模式把组件内 `import 'x.css'` 抽到
   `dist/index.css`，JS bundle 里不再引用 CSS。消费者在自己的入口加一次
@@ -215,7 +297,27 @@ game-2048/
   直接引 `@my-games/2048-core/styles.css` 也一样（内容一致）。
 - **类型来源**：`.d.ts` 由 `vite-plugin-dts` 从 `.ts` / `.vue` 源码提取并 rollup；
   Vue 包额外依赖 `@vue/language-core` 让 SFC 类型可解。
-- `dist/` 已在 `.gitignore` 里；`pnpm build` 会重新生成。
+- **IIFE 全局名 `Game2048Core`**：`window.Game2048Core` 上挂 23 个导出（`Game2048`
+  类 + `bestMove` + 存储工具 + 纯函数原语），完全等同 ESM 版。
+- `dist/` 与 `pages-dist/` 都在 `.gitignore` 里；`pnpm build` / `node tools/pages.mjs`
+  重新生成。
+
+## 发布流程
+
+**npm 三包**：推 `v*` tag 触发 `.github/workflows/publish.yml`：
+门禁（`pnpm build` → `pnpm typecheck` → `pnpm test` → tag/version 一致性校验 →
+`pnpm pack --dry-run` 预览）→ `pnpm -r publish --access public --provenance`
+（npm Trusted Publishing / OIDC，零 secret、免 OTP）。
+在 npmjs.com 上需要为 `@my-games` org 配置 Trusted Publisher 指向 `my-gam/2048` +
+该 workflow 路径 + environment `npm`；GitHub 仓库 Settings → Environments 也要建同名
+环境。首次可信发布得先手动种一个 `0.0.0-stage`（Trusted Publishing 无法发第一版）。
+
+**GitHub Pages**：`main` 分支 push 里 `playground/**` / `packages/**` /
+`tools/pages.mjs` / `pnpm-lock.yaml` 变化触发 `.github/workflows/pages.yml`，
+跑 `pnpm build` 建 dist → `node tools/pages.mjs` 用 vite 的 build API 在内存里
+覆盖 `base=/2048/` 输出 `pages-dist/` → 内置零断链自检（所有绝对路径必须以
+`/2048/` 开头且文件真实存在）→ `actions/upload-pages-artifact` +
+`actions/deploy-pages`。最终 URL **<https://my-gam.github.io/2048/>**。
 
 ## 设计取舍
 

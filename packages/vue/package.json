@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-vue",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "2048 游戏的 Vue 3 组件适配器（Composition API）。",
   "type": "module",
   "main": "./dist/index.js",

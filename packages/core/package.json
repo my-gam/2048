@@ -1,16 +1,22 @@
 {
   "name": "@my-games/2048-core",
-  "version": "0.2.0",
-  "description": "2048 游戏核心引擎：无框架依赖、可测试、含 expectimax AI。",
+  "version": "0.3.0",
+  "description": "2048 游戏核心引擎：无框架依赖、可测试、含 expectimax AI；ESM/CJS/UMD/IIFE 全格式。",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
+  "browser": "./dist/index.iife.js",
   "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.iife.js",
+  "jsdelivr": "./dist/index.iife.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
+    "./umd": "./dist/index.umd.js",
+    "./iife": "./dist/index.iife.js",
     "./styles.css": "./src/styles.css",
     "./package.json": "./package.json"
   },
@@ -33,7 +39,7 @@
     "vite-plugin-dts": "^5.1.2",
     "vitest": "^5.0.5"
   },
-  "keywords": ["2048", "game", "core", "puzzle", "ai", "expectimax", "typescript"],
+  "keywords": ["2048", "game", "core", "puzzle", "ai", "expectimax", "typescript", "umd", "iife"],
   "license": "MIT",
   "author": { "name": "xyj2156" },
   "repository": {

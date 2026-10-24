@@ -9,6 +9,7 @@ dist/
 # playground / vite
 playground/dist/
 .vite/
+pages-dist/
 
 # env / editor / os
 .env

@@ -1,0 +1,25 @@
+/**
+ * Vanilla tab 专属样式补丁：只处理 playground 里那段小徽标；
+ * 其余棋盘/方块/覆盖层样式全部走 @my-games/2048-core/styles.css。
+ */
+
+.vanilla-host .vanilla-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(143, 122, 102, 0.15);
+  color: #776e65;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+}
+
+.vanilla-host code {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(119, 110, 101, 0.12);
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
