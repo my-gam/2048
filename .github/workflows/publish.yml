@@ -51,11 +51,17 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # 全量门禁：任一包构建/测试失败都在此早停，且此时尚未产生任何对外发布。
-      - name: Typecheck, test, build
+      # 顺序关键：build 必须先跑（pnpm -r 拓扑序：core → vue/react），
+      # 因为 vue/react 的 typecheck 与 test 都靠 `@my-games/2048-core` 的
+      # dist/index.d.ts 来解析类型；CI 是全新 checkout，不 build 就没 dist。
+      # 本地之所以反过来也能过，是因为上一次 build 留下的 dist 还在。
+      - name: Build
+        run: pnpm build
+
+      - name: Typecheck & test
         run: |
           pnpm typecheck
           pnpm test
-          pnpm build
 
       # 版本一致性：tag 后缀必须等于三个公开包的 version；防手滑。
       - name: Verify tag matches package versions
