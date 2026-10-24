@@ -1,7 +1,7 @@
 {
   "name": "@my-games/2048-core",
-  "version": "0.3.0",
-  "description": "2048 游戏核心引擎：无框架依赖、可测试、含 expectimax AI；ESM/CJS/UMD/IIFE 全格式。",
+  "version": "0.3.1",
+  "description": "Framework-agnostic 2048 game engine with expectimax AI; ships ESM, CJS, UMD and IIFE builds. 无框架依赖的 2048 引擎，四格式产出。",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -39,7 +39,28 @@
     "vite-plugin-dts": "^5.1.2",
     "vitest": "^5.0.5"
   },
-  "keywords": ["2048", "game", "core", "puzzle", "ai", "expectimax", "typescript", "umd", "iife"],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "2048",
+    "game",
+    "game-engine",
+    "puzzle",
+    "core",
+    "ai",
+    "expectimax",
+    "typescript",
+    "esm",
+    "cjs",
+    "umd",
+    "iife",
+    "browser",
+    "h5",
+    "mobile-web",
+    "zero-dependencies",
+    "cross-framework"
+  ],
   "license": "MIT",
   "author": { "name": "xyj2156" },
   "repository": {

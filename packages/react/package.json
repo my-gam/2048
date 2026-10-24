@@ -1,7 +1,7 @@
 {
   "name": "@my-games/2048-react",
-  "version": "0.3.0",
-  "description": "2048 游戏的 React 18/19 组件适配器（函数组件 + Hooks + forwardRef）。",
+  "version": "0.3.1",
+  "description": "React 18/19 component adapter for @my-games/2048-core — function component + hooks + forwardRef, mobile-ready. 2048 的 React 组件适配器。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -42,7 +42,24 @@
     "vite": "^8.3.5",
     "vite-plugin-dts": "^5.1.2"
   },
-  "keywords": ["2048", "react", "react18", "react19", "game", "puzzle", "component", "hooks"],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "2048",
+    "react",
+    "react18",
+    "react19",
+    "react-component",
+    "hooks",
+    "forwardref",
+    "game",
+    "puzzle",
+    "h5",
+    "mobile-web",
+    "expectimax",
+    "ai"
+  ],
   "license": "MIT",
   "author": { "name": "xyj2156" },
   "repository": {

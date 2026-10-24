@@ -1,7 +1,15 @@
 # game-2048
 
-一个 2048 数字合成小游戏。核心引擎不依赖任何框架，产出 **ESM / CJS / UMD / IIFE 四种格式**；
-Vue 3 与 React 18/19 各有一份官方适配器，两端共享同一份样式表与动画语义，行为完全一致。
+[![npm @my-games/2048-core](https://img.shields.io/npm/v/%40my-games%2F2048-core?label=core&logo=npm&color=cb3837)](https://www.npmjs.com/package/@my-games/2048-core)
+[![npm @my-games/2048-vue](https://img.shields.io/npm/v/%40my-games%2F2048-vue?label=vue&logo=vue.js&color=42b883)](https://www.npmjs.com/package/@my-games/2048-vue)
+[![npm @my-games/2048-react](https://img.shields.io/npm/v/%40my-games%2F2048-react?label=react&logo=react&color=61dafb)](https://www.npmjs.com/package/@my-games/2048-react)
+[![Publish](https://img.shields.io/github/actions/workflow/status/my-gam/2048/publish.yml?label=publish&logo=githubactions)](https://github.com/my-gam/2048/actions/workflows/publish.yml)
+[![Pages](https://img.shields.io/github/actions/workflow/status/my-gam/2048/pages.yml?label=pages&logo=githubactions)](https://my-gam.github.io/2048/)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![online demo](https://img.shields.io/badge/playground-my--gam.github.io%2F2048%2F-blueviolet?logo=githubpages)](https://my-gam.github.io/2048/)
+
+> 一个 2048 数字合成小游戏。核心引擎不依赖任何框架，产出 **ESM / CJS / UMD / IIFE 四种格式**；
+> Vue 3 与 React 18/19 各有一份官方适配器，两端共享同一份样式表与动画语义，行为完全一致。
 
 - **技术栈**：TypeScript 7（Go-native tsgo）· Vite 8（Rolldown bundler）·
   Vue 3.5 · React 19（peerDep 兼容 18.2+）· Vitest 5

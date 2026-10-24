@@ -2,7 +2,7 @@
   "name": "@my-games/2048-workspace",
   "version": "0.0.0",
   "private": true,
-  "description": "2048 游戏：跨框架 core + Vue 3 适配器 + React 18/19 适配器",
+  "description": "Monorepo for game-2048: framework-agnostic core engine + Vue 3 and React 18/19 adapters + Vite playground. pnpm workspace root.",
   "packageManager": "pnpm@12.14.0",
   "engines": {
     "node": ">=20.19"

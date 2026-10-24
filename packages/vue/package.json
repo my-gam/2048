@@ -1,7 +1,7 @@
 {
   "name": "@my-games/2048-vue",
-  "version": "0.3.0",
-  "description": "2048 游戏的 Vue 3 组件适配器（Composition API）。",
+  "version": "0.3.1",
+  "description": "Vue 3 SFC adapter for the @my-games/2048-core game engine — Composition API, mobile-ready, with expectimax AI hook. 2048 的 Vue 3 组件适配器。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -39,7 +39,23 @@
     "vite-plugin-dts": "^5.1.2",
     "vue": "^3.5.44"
   },
-  "keywords": ["2048", "vue", "vue3", "game", "puzzle", "component"],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "2048",
+    "vue",
+    "vue3",
+    "vue-component",
+    "sfc",
+    "composition-api",
+    "game",
+    "puzzle",
+    "h5",
+    "mobile-web",
+    "expectimax",
+    "ai"
+  ],
   "license": "MIT",
   "author": { "name": "xyj2156" },
   "repository": {
