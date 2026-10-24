@@ -1,6 +1,9 @@
 name: Publish to npm
 
 # 触发：推一个 v* tag（如 v0.2.0）即发布；也可在 Actions 页手动 Run。
+# 手动触发默认 dry_run=true —— 只跑全套门禁 + `pnpm publish --dry-run`（除上传
+# registry 外做尽一切），用来验证 workflow 本身；想借手动触发真发版必须显式勾掉。
+# tag 触发不受影响：非 dispatch 事件下 inputs.dry_run 为 null → 真 Publish 照跑。
 # 注意：npm 的 Trusted Publishing（OIDC）无法发布一个包的「第一个版本」
 # （可信发布者只能绑定到已存在的包）。0.1.0 已经手工发过（虽然产物不对，
 # 我们稍后会 npm deprecate 它），所以 v0.2.0 起本 workflow 完全接管发布。
@@ -9,6 +12,12 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 只跑门禁与 publish --dry-run，不上传 registry
+        type: boolean
+        default: true
+        required: false
 
 # 同一时刻只允许一个发布任务，且运行中不可被取消。
 concurrency:
@@ -91,8 +100,17 @@ jobs:
       - name: Preview packed contents
         run: pnpm -r exec pnpm pack --dry-run
 
+      # 手动触发的默认路径：与真发版同一条命令，只多一个 --dry-run（除上传 registry
+      # 外做尽一切）。刻意不带 --provenance —— 来源证明要绑定真实发布，dry-run 下无意义。
+      - name: Publish (dry run)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run
+        run: pnpm -r publish --access public --no-git-checks --ignore-scripts --dry-run
+
       # --ignore-scripts：dist 已在上一步产出，跳过各包 prepublishOnly 的重复构建，
       # 也杜绝「发布钩子递归再触发 publish」。--provenance 生成来源证明（需 public 仓库）。
       # --no-git-checks：Actions 检出为 detached tag，关闭 pnpm 的干净工作区检查。
+      # 条件：tag 触发（inputs.dry_run 为 null → !null = true）必定执行；
+      # 手动触发只有显式勾掉 dry_run 才执行。
       - name: Publish
+        if: github.event_name != 'workflow_dispatch' || !inputs.dry_run
         run: pnpm -r publish --access public --provenance --no-git-checks --ignore-scripts
