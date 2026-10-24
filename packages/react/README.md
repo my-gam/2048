@@ -12,6 +12,7 @@ pnpm add @my-games/2048-react react react-dom
 
 ```tsx
 import { Game2048 } from '@my-games/2048-react';
+import '@my-games/2048-react/style.css';
 
 export function Demo() {
   return (
@@ -27,7 +28,9 @@ export function Demo() {
 }
 ```
 
-组件样式已经内嵌（`import '@my-games/2048-core/styles.css'`），不用额外引 CSS。
+**样式必须显式引入**：vite lib 模式把内部 CSS import 抽到 `dist/index.css`，
+JS bundle 不再引用。消费者入口加一次 `import '@my-games/2048-react/style.css'`
+（或从 core 引 `import '@my-games/2048-core/styles.css'`，内容一致）。
 
 ## Props
 

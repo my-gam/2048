@@ -13,16 +13,16 @@
     "@my-games/2048-core": "workspace:*",
     "@my-games/2048-react": "workspace:*",
     "@my-games/2048-vue": "workspace:*",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "vue": "^3.5.12"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "typescript": "^5.9.3",
-    "vite": "^5.4.10"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
   }
 }

@@ -2,10 +2,10 @@
   "name": "@my-games/2048-workspace",
   "version": "0.0.0",
   "private": true,
-  "description": "2048 游戏：跨框架 core + Vue 3 适配器 + React 18 适配器",
+  "description": "2048 游戏：跨框架 core + Vue 3 适配器 + React 18/19 适配器",
   "packageManager": "pnpm@12.14.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19"
   },
   "scripts": {
     "build": "pnpm -r --filter './packages/**' build",
@@ -16,7 +16,10 @@
     "clean": "pnpm -r exec rm -rf dist"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
-    "vitest": "^2.1.4"
+    "@typescript/typescript6": "^6.0.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vite-plugin-dts": "^5.1.2",
+    "vitest": "^5.0.5"
   }
 }

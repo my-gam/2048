@@ -1,8 +1,10 @@
 # game-2048
 
-一个 2048 数字合成小游戏。核心引擎不依赖任何框架，Vue 3 与 React 18 各有一份官方适配器；
+一个 2048 数字合成小游戏。核心引擎不依赖任何框架，Vue 3 与 React 18/19 各有一份官方适配器；
 两端共享同一份样式表与动画语义，行为完全一致。
 
+- **技术栈**：TypeScript 7（Go-native tsgo）· Vite 8（Rolldown bundler）·
+  Vue 3.5 · React 19（peerDep 兼容 18.2+）· Vitest 5
 - **包结构**：`packages/core` + `packages/vue` + `packages/react`，pnpm workspace 管理，
   `playground/` 是同时挂两种框架的演示页。
 - **纯 TS**：全项目 `strict: true` + `noUncheckedIndexedAccess`；core 单元测试 44 条，
@@ -31,9 +33,9 @@ http://127.0.0.1:5173/?ai=1
 其他常用命令：
 
 ```bash
-pnpm build      # 三包各自产 dist（core/vue/react）
-pnpm test       # 跑 core 单元测试
-pnpm typecheck  # 三包 + playground 全量类型检查
+pnpm build      # 三包各自 vite build → dist/(index.js + index.d.ts + index.css)
+pnpm test       # 跑 core 单元测试（44 条）
+pnpm typecheck  # 三包 + playground 全量类型检查（纯 tsc，不依赖 vue-tsc）
 ```
 
 ## 玩法
@@ -56,6 +58,7 @@ pnpm add @my-games/2048-vue vue
 ```vue
 <script setup lang="ts">
 import { Game2048 } from '@my-games/2048-vue';
+import '@my-games/2048-vue/style.css';
 
 function onMove(dir: string, gained: number) {
   console.log(dir, gained);
@@ -77,8 +80,10 @@ function onLost() { console.log('lost'); }
 </template>
 ```
 
-组件样式已经通过 `import '@my-games/2048-core/styles.css'` 内嵌到 SFC，
-不用额外引 CSS。想完全脱离组件用引擎自己画 UI：
+**样式必须显式引入**：Vite 8 lib 模式把组件内 CSS 抽到 `dist/index.css`，
+JS bundle 里不再有 `import 'foo.css'`。消费者在自己的入口加一次
+`import '@my-games/2048-vue/style.css'`（或从 core 引 `import '@my-games/2048-core/styles.css'`，
+两者内容一致）。
 
 ```ts
 import { Game2048 } from '@my-games/2048-core';
@@ -87,7 +92,7 @@ const unsub = g.subscribe((state) => render(state));
 g.move('left');
 ```
 
-### React 18
+### React 18 / 19
 
 ```bash
 pnpm add @my-games/2048-react react react-dom
@@ -95,6 +100,7 @@ pnpm add @my-games/2048-react react react-dom
 
 ```tsx
 import { Game2048 } from '@my-games/2048-react';
+import '@my-games/2048-react/style.css';
 
 export function Demo() {
   return (
@@ -174,14 +180,18 @@ Tile 位置靠 CSS 变量 `--row` / `--col` + `calc()` 完成，无需 JS 测像
 ```
 game-2048/
 ├── packages/
-│   ├── core/          @my-games/2048-core   纯 TS 引擎
+│   ├── core/          @my-games/2048-core   纯 TS 引擎（vite build --mode lib）
 │   │   ├── src/{types,board,game,ai,storage,index}.ts
 │   │   ├── src/styles.css                       单份视觉，Vue/React 共享
+│   │   ├── vite.config.ts
 │   │   └── test/{board,game,ai}.test.ts         44 单测
 │   ├── vue/           @my-games/2048-vue   Vue 3 SFC + composable
-│   │   └── src/{Game2048.vue,useGame.ts,index.ts,instance.ts}
-│   └── react/         @my-games/2048-react React 18 组件 + hook
-│       └── src/{Game2048.tsx,useGame.ts,index.ts}
+│   │   ├── src/{Game2048.vue,useGame.ts,index.ts,instance.ts}
+│   │   ├── vite.config.ts                       plugin-vue + vite-plugin-dts
+│   │   └── env.d.ts                             *.vue / *.css ambient 声明
+│   └── react/         @my-games/2048-react React 18/19 组件 + hook
+│       ├── src/{Game2048.tsx,useGame.ts,index.ts}
+│       └── vite.config.ts                       plugin-react + vite-plugin-dts
 ├── playground/        Vite 演示页（双框架并排）
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json
@@ -190,19 +200,37 @@ game-2048/
 
 ## 构建产物
 
+三包统一走 `vite build --mode lib`：
+
 | 位置 | 内容 |
 | --- | --- |
-| `packages/core/dist/` | tsc 直出 ESM + d.ts + sourcemap |
-| `packages/vue/dist/` | vite lib 模式 ESM bundle + style.css + sourcemap |
-| `packages/react/dist/` | tsc 直出 ESM + d.ts + sourcemap |
-| `playground/dist/` | vite build 静态资源（部署 QW Pages 可直接指到这里） |
+| `packages/core/dist/` | `index.js` + `index.d.ts`（vite-plugin-dts rollup 版）+ sourcemap |
+| `packages/vue/dist/` | `index.js` + `index.d.ts` + `index.css`（vite lib 抽出的样式）+ sourcemap |
+| `packages/react/dist/` | `index.js` + `index.d.ts` + `index.css` + sourcemap |
+| `playground/dist/` | `vite build` 静态资源（部署 QW Pages 可直接指到这里） |
 
-`dist/` 已在 `.gitignore` 里；`pnpm build` 会重新生成。
+- **CSS 需要显式引入**：Vite 8 lib 模式把组件内 `import 'x.css'` 抽到
+  `dist/index.css`，JS bundle 里不再引用 CSS。消费者在自己的入口加一次
+  `import '@my-games/2048-vue/style.css'` 或 `import '@my-games/2048-react/style.css'`；
+  直接引 `@my-games/2048-core/styles.css` 也一样（内容一致）。
+- **类型来源**：`.d.ts` 由 `vite-plugin-dts` 从 `.ts` / `.vue` 源码提取并 rollup；
+  Vue 包额外依赖 `@vue/language-core` 让 SFC 类型可解。
+- `dist/` 已在 `.gitignore` 里；`pnpm build` 会重新生成。
 
 ## 设计取舍
 
-- **样式单点**：CSS 只放一份在 `core/src/styles.css`，两包都 `import '@my-games/2048-core/styles.css'`。
-  好处是视觉一致；代价是 core 不再「纯逻辑」，接受这个耦合。
+- **样式单点**：CSS 源只放一份在 `core/src/styles.css`，两包 `import` 后被 vite
+  各自抽到自己的 `dist/index.css`（内容一致但字节相同）。好处是视觉一致；
+  代价是 vue/react 包里各存了一份样式，且消费者要显式引 CSS。
+- **Vue 包不跑 vue-tsc**：TS 7 的 JS API 变化让 vue-tsc 3.3.13 直接崩，上游
+  issue #6156 说要等 TS 7.1 插件 API。改用「纯 `tsc --noEmit` 只查 `.ts` 源 +
+  `vite-plugin-dts` 从 `.vue` 提取 `.d.ts`」的组合，代价是模板内绑定表达式不再
+  做类型检查（`t.isNew` 之类的字段错在构建期发现不了，运行时才炸）。
+  未来 vue-tsc 4.x 出来时把 `typecheck` 脚本切回 `vue-tsc` 即可。
+- **dts 依赖 `@typescript/typescript6`**：vite-plugin-dts / unplugin-dts 内部调
+  老版 TypeScript JS API，TS 7 已经把 API 表面挪到 Go 侧不再暴露同份 JS；
+  官方兜底是在 devDeps 装 `@typescript/typescript6`，dts 生成层用 6.0.2 的
+  编译器 JS API，其余项目代码走 TS 7 的 `tsc` 命令行。
 - **键盘焦点模型**：window keydown 但严格判 `document.activeElement === boardEl`。
   多实例并存时不会出现两个棋盘同时响应同一按键的错乱。
 - **AI 默认隐藏**：`suggestMove` / `aiMove` 一直在 API 上，UI 层默认不给按钮。
