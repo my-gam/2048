@@ -1,5 +1,5 @@
 {
-  "name": "@my-games/game-2048-react",
+  "name": "@my-games/2048-react",
   "version": "0.1.0",
   "description": "2048 游戏的 React 18 组件适配器（函数组件 + Hooks）。",
   "type": "module",
@@ -8,7 +8,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./style.css": "@my-games/game-2048-core/styles.css"
+    "./style.css": "@my-games/2048-core/styles.css"
   },
   "files": [
     "src",
@@ -23,7 +23,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@my-games/game-2048-core": "workspace:*"
+    "@my-games/2048-core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.11",

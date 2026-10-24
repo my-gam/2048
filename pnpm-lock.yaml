@@ -184,7 +184,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@my-games/game-2048-core':
+      '@my-games/2048-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -206,7 +206,7 @@ importers:
 
   packages/vue:
     dependencies:
-      '@my-games/game-2048-core':
+      '@my-games/2048-core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -228,13 +228,13 @@ importers:
 
   playground:
     dependencies:
-      '@my-games/game-2048-core':
+      '@my-games/2048-core':
         specifier: workspace:*
         version: link:../packages/core
-      '@my-games/game-2048-react':
+      '@my-games/2048-react':
         specifier: workspace:*
         version: link:../packages/react
-      '@my-games/game-2048-vue':
+      '@my-games/2048-vue':
         specifier: workspace:*
         version: link:../packages/vue
       react:

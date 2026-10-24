@@ -1,4 +1,4 @@
-import type { Direction } from '@my-games/game-2048-core';
+import type { Direction } from '@my-games/2048-core';
 
 /**
  * 组件 `ref` 上暴露的方法（`defineExpose` 的对应类型）。

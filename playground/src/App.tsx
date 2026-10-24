@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Game2048 as Game2048React, type Game2048Handle as ReactHandle } from '@my-games/game-2048-react';
-import type { Game2048Instance as VueHandle } from '@my-games/game-2048-vue';
-import type { Direction } from '@my-games/game-2048-core';
+import { Game2048 as Game2048React, type Game2048Handle as ReactHandle } from '@my-games/2048-react';
+import type { Game2048Instance as VueHandle } from '@my-games/2048-vue';
+import type { Direction } from '@my-games/2048-core';
 import { VuePanel } from './VuePanel';
 
 /**
@@ -100,9 +100,9 @@ export function App() {
       <header className="pg-header">
         <h1>game-2048 · Playground</h1>
         <p>
-          一个 2048 游戏核心，两个官方适配器：<code>@my-games/game-2048-vue</code>（Vue 3 组件）
-          与 <code>@my-games/game-2048-react</code>（React 18 组件）。两包共享
-          <code> @my-games/game-2048-core</code> 引擎与样式表。
+          一个 2048 游戏核心，两个官方适配器：<code>@my-games/2048-vue</code>（Vue 3 组件）
+          与 <code>@my-games/2048-react</code>（React 18 组件）。两包共享
+          <code> @my-games/2048-core</code> 引擎与样式表。
         </p>
         <div className="pg-badges">
           <span className="pg-badge">core · 纯 TS · 无框架依赖</span>
@@ -163,7 +163,7 @@ export function App() {
         <div className="pg-panel">
           <div className="pg-panel-head">
             <h2>Vue 3</h2>
-            <span className="pg-tag pg-tag-vue">Game2048 from @my-games/game-2048-vue</span>
+            <span className="pg-tag pg-tag-vue">Game2048 from @my-games/2048-vue</span>
           </div>
           <p className="pg-panel-desc">
             单文件 <code>Game2048.vue</code> + <code>useGame()</code> composable；
@@ -184,7 +184,7 @@ export function App() {
         <div className="pg-panel">
           <div className="pg-panel-head">
             <h2>React 18</h2>
-            <span className="pg-tag pg-tag-react">Game2048 from @my-games/game-2048-react</span>
+            <span className="pg-tag pg-tag-react">Game2048 from @my-games/2048-react</span>
           </div>
           <p className="pg-panel-desc">
             函数组件 + <code>useGame()</code> hook；<code>forwardRef</code> +

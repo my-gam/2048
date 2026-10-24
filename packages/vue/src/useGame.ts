@@ -1,5 +1,5 @@
 import { onBeforeUnmount, shallowRef, type ShallowRef } from 'vue';
-import { bestMove as aiBestMove, Game2048, type Direction, type GameOptions, type GameState } from '@my-games/game-2048-core';
+import { bestMove as aiBestMove, Game2048, type Direction, type GameOptions, type GameState } from '@my-games/2048-core';
 
 /**
  * `useGame` —— Vue 侧连接 Game2048 引擎的 composable。

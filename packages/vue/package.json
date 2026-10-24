@@ -1,5 +1,5 @@
 {
-  "name": "@my-games/game-2048-vue",
+  "name": "@my-games/2048-vue",
   "version": "0.1.0",
   "description": "2048 游戏的 Vue 3 组件适配器（Composition API）。",
   "type": "module",
@@ -8,7 +8,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./style.css": "@my-games/game-2048-core/styles.css"
+    "./style.css": "@my-games/2048-core/styles.css"
   },
   "files": [
     "src",
@@ -22,7 +22,7 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "@my-games/game-2048-core": "workspace:*"
+    "@my-games/2048-core": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",

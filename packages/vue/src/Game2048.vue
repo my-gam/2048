@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import '@my-games/game-2048-core/styles.css';
+import '@my-games/2048-core/styles.css';
 import { useGame } from './useGame';
-import type { Direction } from '@my-games/game-2048-core';
+import type { Direction } from '@my-games/2048-core';
 
 /**
  * Game2048 —— Vue 3 官方组件。
@@ -24,7 +24,7 @@ import type { Direction } from '@my-games/game-2048-core';
 
 interface Props {
   size?: 3 | 4 | 5 | 6;
-  storage?: import('@my-games/game-2048-core').SaveStorage | null;
+  storage?: import('@my-games/2048-core').SaveStorage | null;
   saveKey?: string;
   bestKey?: string;
   freshStart?: boolean;

@@ -17,7 +17,7 @@ export default defineConfig({
       fileName: 'index'
     },
     rollupOptions: {
-      external: ['vue', '@my-games/game-2048-core']
+      external: ['vue', '@my-games/2048-core']
     },
     sourcemap: true,
     emptyOutDir: true

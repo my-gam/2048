@@ -10,9 +10,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@my-games/game-2048-core": "workspace:*",
-    "@my-games/game-2048-react": "workspace:*",
-    "@my-games/game-2048-vue": "workspace:*",
+    "@my-games/2048-core": "workspace:*",
+    "@my-games/2048-react": "workspace:*",
+    "@my-games/2048-vue": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "vue": "^3.5.12"

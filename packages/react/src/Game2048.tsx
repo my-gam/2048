@@ -10,8 +10,8 @@ import {
   useRef,
   useState
 } from 'react';
-import '@my-games/game-2048-core/styles.css';
-import type { Direction, SaveStorage } from '@my-games/game-2048-core';
+import '@my-games/2048-core/styles.css';
+import type { Direction, SaveStorage } from '@my-games/2048-core';
 import { useGame } from './useGame';
 
 /**

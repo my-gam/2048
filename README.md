@@ -50,12 +50,12 @@ pnpm typecheck  # 三包 + playground 全量类型检查
 ### Vue 3
 
 ```bash
-pnpm add @my-games/game-2048-vue vue
+pnpm add @my-games/2048-vue vue
 ```
 
 ```vue
 <script setup lang="ts">
-import { Game2048 } from '@my-games/game-2048-vue';
+import { Game2048 } from '@my-games/2048-vue';
 
 function onMove(dir: string, gained: number) {
   console.log(dir, gained);
@@ -77,11 +77,11 @@ function onLost() { console.log('lost'); }
 </template>
 ```
 
-组件样式已经通过 `import '@my-games/game-2048-core/styles.css'` 内嵌到 SFC，
+组件样式已经通过 `import '@my-games/2048-core/styles.css'` 内嵌到 SFC，
 不用额外引 CSS。想完全脱离组件用引擎自己画 UI：
 
 ```ts
-import { Game2048 } from '@my-games/game-2048-core';
+import { Game2048 } from '@my-games/2048-core';
 const g = new Game2048({ size: 4 });
 const unsub = g.subscribe((state) => render(state));
 g.move('left');
@@ -90,11 +90,11 @@ g.move('left');
 ### React 18
 
 ```bash
-pnpm add @my-games/game-2048-react react react-dom
+pnpm add @my-games/2048-react react react-dom
 ```
 
 ```tsx
-import { Game2048 } from '@my-games/game-2048-react';
+import { Game2048 } from '@my-games/2048-react';
 
 export function Demo() {
   return (
@@ -144,7 +144,7 @@ ref.current?.aiMove();      // 让 AI 走一步
 - `suggestMove(): Direction | null` — 只查询建议，不走子
 - `aiMove(): Direction | null` — 让 AI 走一步（内部触发引擎 move，会推订阅）
 
-## 引擎核心 API（`@my-games/game-2048-core`）
+## 引擎核心 API（`@my-games/2048-core`）
 
 - `new Game2048(options?)` — 完整可注入：`size` / `rng` / `storage` / `saveKey` / `bestKey` /
   `target` / `undoLimit` / `freshStart`
@@ -174,13 +174,13 @@ Tile 位置靠 CSS 变量 `--row` / `--col` + `calc()` 完成，无需 JS 测像
 ```
 game-2048/
 ├── packages/
-│   ├── core/          @my-games/game-2048-core   纯 TS 引擎
+│   ├── core/          @my-games/2048-core   纯 TS 引擎
 │   │   ├── src/{types,board,game,ai,storage,index}.ts
 │   │   ├── src/styles.css                       单份视觉，Vue/React 共享
 │   │   └── test/{board,game,ai}.test.ts         44 单测
-│   ├── vue/           @my-games/game-2048-vue   Vue 3 SFC + composable
+│   ├── vue/           @my-games/2048-vue   Vue 3 SFC + composable
 │   │   └── src/{Game2048.vue,useGame.ts,index.ts,instance.ts}
-│   └── react/         @my-games/game-2048-react React 18 组件 + hook
+│   └── react/         @my-games/2048-react React 18 组件 + hook
 │       └── src/{Game2048.tsx,useGame.ts,index.ts}
 ├── playground/        Vite 演示页（双框架并排）
 ├── pnpm-workspace.yaml
@@ -201,7 +201,7 @@ game-2048/
 
 ## 设计取舍
 
-- **样式单点**：CSS 只放一份在 `core/src/styles.css`，两包都 `import '@my-games/game-2048-core/styles.css'`。
+- **样式单点**：CSS 只放一份在 `core/src/styles.css`，两包都 `import '@my-games/2048-core/styles.css'`。
   好处是视觉一致；代价是 core 不再「纯逻辑」，接受这个耦合。
 - **键盘焦点模型**：window keydown 但严格判 `document.activeElement === boardEl`。
   多实例并存时不会出现两个棋盘同时响应同一按键的错乱。

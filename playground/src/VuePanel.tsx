@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { createApp, h } from 'vue';
-import { Game2048 as Game2048Vue, type Game2048Instance } from '@my-games/game-2048-vue';
-import type { Direction } from '@my-games/game-2048-core';
+import { Game2048 as Game2048Vue, type Game2048Instance } from '@my-games/2048-vue';
+import type { Direction } from '@my-games/2048-core';
 
 /**
  * 在 React playground 里挂一个 Vue 组件。Vite 同时启 plugin-vue 与 plugin-react，

@@ -8,4 +8,4 @@ export type {
   GameStatus,
   SaveStorage,
   Tile
-} from '@my-games/game-2048-core';
+} from '@my-games/2048-core';

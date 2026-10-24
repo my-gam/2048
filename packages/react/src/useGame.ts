@@ -5,7 +5,7 @@ import {
   type Direction,
   type GameOptions,
   type GameState
-} from '@my-games/game-2048-core';
+} from '@my-games/2048-core';
 
 /**
  * `useGame` —— React Hook 版引擎桥接。

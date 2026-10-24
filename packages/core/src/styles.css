@@ -1,7 +1,7 @@
 /**
  * game-2048 通用样式表。
  *
- * 由 `@my-games/game-2048-core/styles.css` 暴露，Vue / React 适配器都直接 import 这一份，
+ * 由 `@my-games/2048-core/styles.css` 暴露，Vue / React 适配器都直接 import 这一份，
  * 保持视觉一致（避免两包各自漂移）。
  *
  * 关键约定：
