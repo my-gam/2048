@@ -48,6 +48,11 @@ jobs:
       - name: Build workspace packages
         run: pnpm build
 
+      # 三包 dist 必须真产出，否则 playground 会拿到旧/空依赖，Pages 白屏。
+      # pnpm --filter 空跑时退出码仍为 0，故此处显式校验产物。
+      - name: Verify build artifacts
+        run: node tools/verify-dist.mjs
+
       - name: Build Pages bundle (base=/${{ github.event.repository.name }}/)
         run: node tools/pages.mjs
         env:

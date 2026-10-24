@@ -58,6 +58,11 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # 产物硬校验：pnpm 的 --filter 匹配 0 个项目时退出码仍是 0（空跑），
+      # 一旦脚本写坏就会「build 绿 → 发出没有 dist 的空包」。这里改成硬失败。
+      - name: Verify build artifacts
+        run: node tools/verify-dist.mjs
+
       - name: Typecheck & test
         run: |
           pnpm typecheck
