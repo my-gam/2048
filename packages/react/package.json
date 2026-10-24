@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "2048 游戏的 React 18/19 组件适配器（函数组件 + Hooks + forwardRef）。",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "2048 游戏核心引擎：无框架依赖、可测试、含 expectimax AI。",
   "type": "module",
   "main": "./dist/index.js",

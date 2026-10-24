@@ -1,0 +1,87 @@
+name: Publish to npm
+
+# 触发：推一个 v* tag（如 v0.2.0）即发布；也可在 Actions 页手动 Run。
+# 注意：npm 的 Trusted Publishing（OIDC）无法发布一个包的「第一个版本」
+# （可信发布者只能绑定到已存在的包）。0.1.0 已经手工发过（虽然产物不对，
+# 我们稍后会 npm deprecate 它），所以 v0.2.0 起本 workflow 完全接管发布。
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+# 同一时刻只允许一个发布任务，且运行中不可被取消。
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+# 最小权限：contents 只读用于检出；id-token 用于向 GitHub 申请 OIDC 令牌。
+# 刻意不声明任何 npm 相关 secrets —— 发布身份完全由 OIDC 可信发布者换取。
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # 必须与 npmjs 上「Trusted Publisher」登记的 Environment 名一致；
+    # 也要在 GitHub 仓库 Settings → Environments 里建同名环境。
+    environment: npm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # pnpm 版本由根 package.json 的 packageManager 字段决定（与本地一致）。
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      # setup-node v7 只加了 mise.toml 支持与 node-version-file 绝对路径，
+      # registry-url / cache 输入行为不变，故抬版无需改动下面的参数。
+      # registry-url 仅写入指向 npmjs 的 .npmrc（不设 NODE_AUTH_TOKEN → 纯 OIDC）。
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 全量门禁：任一包构建/测试失败都在此早停，且此时尚未产生任何对外发布。
+      - name: Typecheck, test, build
+        run: |
+          pnpm typecheck
+          pnpm test
+          pnpm build
+
+      # 版本一致性：tag 后缀必须等于三个公开包的 version；防手滑。
+      - name: Verify tag matches package versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#v}"
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            echo "workflow_dispatch 触发，跳过 tag 校验（TAG=$GITHUB_REF_NAME）"
+            exit 0
+          fi
+          CORE="$(node -p "require('./packages/core/package.json').version")"
+          VUE="$(node -p "require('./packages/vue/package.json').version")"
+          REACT="$(node -p "require('./packages/react/package.json').version")"
+          echo "tag=$TAG core=$CORE vue=$VUE react=$REACT"
+          if [ "$TAG" != "$CORE" ] || [ "$TAG" != "$VUE" ] || [ "$TAG" != "$REACT" ]; then
+            echo "::error::tag v$TAG 与三包版本 (core $CORE / vue $VUE / react $REACT) 不一致"
+            exit 1
+          fi
+
+      # 上传前预览 tarball 清单，避免误把 src/测试/lockfile 打进包。
+      - name: Preview packed contents
+        run: pnpm -r exec pnpm pack --dry-run
+
+      # --ignore-scripts：dist 已在上一步产出，跳过各包 prepublishOnly 的重复构建，
+      # 也杜绝「发布钩子递归再触发 publish」。--provenance 生成来源证明（需 public 仓库）。
+      # --no-git-checks：Actions 检出为 detached tag，关闭 pnpm 的干净工作区检查。
+      - name: Publish
+        run: pnpm -r publish --access public --provenance --no-git-checks --ignore-scripts
