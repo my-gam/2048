@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-core",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Framework-agnostic 2048 game engine with expectimax AI; ships ESM, CJS, UMD and IIFE builds. 无框架依赖的 2048 引擎，四格式产出。",
   "type": "module",
   "main": "./dist/index.cjs",

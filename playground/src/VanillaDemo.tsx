@@ -105,7 +105,9 @@ export function VanillaDemo({
     toolbar.innerHTML = `
       <p class="game-2048-desc">
         直接消费 <code>@my-games/2048-core</code>，棋盘 DOM 手写、无 Vue/React。
-        移动 <span data-role="movecount">0</span> 步 · 状态 <b data-role="status">playing</b>。
+      </p>
+      <p class="pg-vanilla-status">
+        <span data-role="movecount">0</span> 步 · <b data-role="status">playing</b>
       </p>
       <div class="game-2048-actions">
         ${enableAI ? '<button class="game-2048-button" type="button" data-role="ai-hint">提示 <span data-role="ai-hint-out"></span></button>' : ''}

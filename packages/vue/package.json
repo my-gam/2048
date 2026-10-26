@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-vue",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Vue 3 SFC adapter for the @my-games/2048-core game engine — Composition API, mobile-ready, with expectimax AI hook. 2048 的 Vue 3 组件适配器。",
   "type": "module",
   "main": "./dist/index.js",

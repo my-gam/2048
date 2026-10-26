@@ -9,12 +9,14 @@
  *   防止子元素吞掉滑动检测。
  * - Tile 定位用 translate，row/col 通过 --row / --col CSS 变量注入到 style 里；
  *   `transition: transform 120ms` 让滑动有平滑感，scale 关键帧负责新块与合并 pop。
- * - 尺寸自适应：容器宽度决定一切；cell 与 gap 用比例 + clamp() 缩放，
- *   最小 320px、最大 520px 之间保持视觉合理。
+ * - **尺寸模型：容器驱动，不用 vw**。组件 `width: 100%` 撑满父容器、
+ *   `max-width: 520px` 封顶；board 用 `aspect-ratio: 1` 保持正方。
+ *   宿主通过给 `.game-2048` 一个宽度（或放进有宽度的容器）即可控制棋盘大小，
+ *   彻底规避 `vw` 含滚动条、嵌套容器算错、headless 视口不透明等一类坑。
+ *   gap / radius 仍用 clamp() 随组件自身宽度做视觉微调。
  */
 
 .game-2048 {
-  --board-size: min(90vw, 520px);
   --gap: clamp(6px, 2.5vw, 12px);
   --radius: clamp(4px, 1.2vw, 8px);
   --bg-board: #bbada0;
@@ -23,9 +25,11 @@
   --text-light: #f9f6f2;
   --accent: #8f7a66;
 
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   gap: var(--gap);
+  width: 100%;
+  max-width: 520px;
   font-family: 'Helvetica Neue', 'Segoe UI', system-ui, -apple-system, sans-serif;
   color: var(--text-dark);
   user-select: none;
@@ -37,8 +41,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  width: var(--board-size);
-  max-width: 90vw;
+  width: 100%;
 }
 
 .game-2048-title {
@@ -101,8 +104,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  width: var(--board-size);
-  max-width: 90vw;
+  width: 100%;
 }
 
 .game-2048-desc {
@@ -156,15 +158,16 @@
 
 .game-2048-board {
   position: relative;
-  width: var(--board-size);
-  max-width: 90vw;
+  width: 100%;
   aspect-ratio: 1;
   padding: var(--gap);
   border-radius: var(--radius);
   background: var(--bg-board);
   touch-action: none;
   outline: none;
-  box-sizing: content-box;
+  /* border-box：padding 计入宽度，board 外宽 = 容器宽，与 header/toolbar 对齐；
+     content-box 会额外加 2×gap 造成窄屏横向溢出。 */
+  box-sizing: border-box;
 }
 
 .game-2048-board:focus-visible {
@@ -312,5 +315,121 @@
   .game-2048-tile.is-new,
   .game-2048-tile.is-merged {
     animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 移动端适配（组件级，≤480px 断点）
+ *
+ * 目标：在窄屏上让 header/toolbar 尽量矮、tile 数值字号收紧，一屏内既能
+ * 看到棋盘又能看到分数与操作按钮。desc 段落保留（各适配器写的玩法/状态
+ * 文案是组件自带内容，不该由包体擅自隐藏），只压缩字号与行高。
+ *
+ * 尺寸仍由容器驱动（.game-2048 width:100%），这里只收紧 gap 与字号。
+ * ------------------------------------------------------------------ */
+@media (max-width: 480px) {
+  .game-2048 {
+    --gap: 6px;
+  }
+
+  .game-2048-title {
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  .game-2048-score-box {
+    min-width: 62px;
+    padding: 4px 8px 6px;
+  }
+
+  .game-2048-score-box .label {
+    font-size: 9px;
+    letter-spacing: 0.8px;
+  }
+
+  .game-2048-score-box .value {
+    font-size: 18px;
+  }
+
+  .game-2048-score-box .delta {
+    font-size: 12px;
+    right: 6px;
+  }
+
+  .game-2048-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .game-2048-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .game-2048-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 1;
+  }
+
+  .game-2048-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  /* tile 数值字号：整体降一档，保证 4-5 位数在窄格内也不溢出 */
+  .game-2048-tile {
+    font-size: clamp(20px, 7vw, 36px);
+  }
+
+  .game-2048-tile[data-value='128'],
+  .game-2048-tile[data-value='256'],
+  .game-2048-tile[data-value='512'] {
+    font-size: clamp(16px, 5.6vw, 28px);
+  }
+
+  .game-2048-tile[data-value='1024'],
+  .game-2048-tile[data-value='2048'] {
+    font-size: clamp(13px, 4.8vw, 24px);
+  }
+
+  .game-2048-tile[data-super='1'] {
+    font-size: clamp(11px, 4vw, 20px);
+  }
+
+  .game-2048-overlay h2 {
+    font-size: clamp(24px, 8vw, 40px);
+  }
+
+  .game-2048-overlay .row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 12px;
+  }
+}
+
+/* 超窄屏（≤360px，老安卓机 / iPhone SE 1）：再挤一档 */
+@media (max-width: 360px) {
+  .game-2048-score-box {
+    min-width: 54px;
+    padding: 3px 6px 5px;
+  }
+
+  .game-2048-score-box .label {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .game-2048-score-box .value {
+    font-size: 16px;
+  }
+
+  .game-2048-button {
+    padding: 5px 10px;
+    font-size: 12px;
   }
 }

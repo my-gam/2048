@@ -266,3 +266,149 @@ body {
 }
 
 .pg-ai-flag.is-off { opacity: 0.6; }
+
+/* Vanilla tab 独立状态行 —— 从 .game-2048-desc 段落里拆出来的动态信息
+   （步数 + 当前 status），在移动端 desc 被隐藏时它仍然保留 */
+.pg-vanilla-status {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-vanilla-status b {
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ *
+ * 移动端紧凑版（≤640px）—— 只管 playground 外壳（chrome）
+ *   - 外壳：padding / gap 大幅收窄，减少竖向浪费
+ *   - Header：段落与 badge 群隐藏（第一次访问的用户来说，
+ *     「三种消费方式」的文字说明在窄屏上比游戏本身占的空间还大）
+ *   - Tabs：短标签替代长标签，整行等宽；min-width:0 让 grid 1fr 能真正收缩
+ *   - Panel：tag 药丸 + panel-desc 都隐藏（外层信息冗余）
+ *   - AI 提示：文字简化 + 字号缩一档
+ *   - 日志：max-height 砍半
+ *   - Footer：只留一行「存档 key 说明」，「script 引入等价示例」段落隐藏
+ *
+ *   注意：.game-2048-* 组件内部的移动适配（board 尺寸 / header / toolbar
+ *   竖排 / tile 字号 / overlay）全部由 @my-games/2048-core 的 styles.css
+ *   自带（见该文件末尾的 @media 块），playground 不再 override，避免与包体漂移。
+ * ------------------------------------------------------------------ */
+@media (max-width: 640px) {
+  .pg-shell {
+    padding: 12px 12px 32px;
+    gap: 12px;
+  }
+
+  .pg-header h1 {
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+
+  .pg-header p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .pg-badges {
+    display: none;
+  }
+
+  .pg-tabs {
+    align-self: stretch;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px;
+    padding: 3px;
+    border-radius: 8px;
+  }
+
+  .pg-tab {
+    min-width: 0;
+    padding: 7px 6px;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pg-tab .pg-tab-long {
+    display: none;
+  }
+  .pg-tab .pg-tab-short {
+    display: inline;
+  }
+
+  .pg-hint {
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .pg-ai-panel {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .pg-ai-panel h3 {
+    font-size: 13px;
+  }
+
+  .pg-ai-panel .status {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .pg-panel[role="tabpanel"] {
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .pg-panel-head {
+    gap: 6px;
+  }
+
+  .pg-panel-head h2 {
+    font-size: 16px;
+  }
+
+  .pg-panel-head .pg-tag {
+    display: none;
+  }
+
+  .pg-panel-desc {
+    display: none;
+  }
+
+  .pg-log {
+    max-height: 96px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .pg-footer p + p {
+    display: none;
+  }
+
+  .pg-footer {
+    margin-top: 4px;
+    padding-top: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+}
+
+/* 桌面（>640px）：默认就是原来的宽松布局；只是显式声明长标签可见、短标签隐藏，
+   与移动段的切换对称。 */
+@media (min-width: 641px) {
+  .pg-tab .pg-tab-long {
+    display: inline;
+  }
+  .pg-tab .pg-tab-short {
+    display: none;
+  }
+}

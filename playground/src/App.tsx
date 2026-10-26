@@ -99,11 +99,11 @@ export function App() {
       <nav className="pg-tabs" role="tablist" aria-label="Demo tabs">
         {(
           [
-            ['vanilla', 'Vanilla · 直接引入 core'],
-            ['vue', 'Vue 3 组件'],
-            ['react', 'React 18/19 组件']
+            ['vanilla', 'Vanilla', 'Vanilla · 直接引入 core'],
+            ['vue', 'Vue 3', 'Vue 3 组件'],
+            ['react', 'React', 'React 18/19 组件']
           ] as const
-        ).map(([key, label]) => (
+        ).map(([key, short, long]) => (
           <button
             key={key}
             type="button"
@@ -112,7 +112,8 @@ export function App() {
             className={`pg-tab${demo === key ? ' is-active' : ''}`}
             onClick={() => setDemo(key)}
           >
-            {label}
+            <span className="pg-tab-short">{short}</span>
+            <span className="pg-tab-long">{long}</span>
           </button>
         ))}
       </nav>

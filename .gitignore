@@ -22,3 +22,6 @@ Thumbs.db
 
 # test / coverage
 coverage/
+
+# 本地视觉验证截图（headless Edge 输出，不入库）
+.shots/

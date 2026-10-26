@@ -1,6 +1,6 @@
 {
   "name": "@my-games/2048-react",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "React 18/19 component adapter for @my-games/2048-core — function component + hooks + forwardRef, mobile-ready. 2048 的 React 组件适配器。",
   "type": "module",
   "main": "./dist/index.js",
